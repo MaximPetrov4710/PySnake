@@ -4,13 +4,13 @@ import sys
 
 SCREEN_SIZE = (800, 600)
 
-SNAKE_ICON = "1670848189_grizly-club-p-pikseli-png-21.jpg"
+SNAKE_ICON = "unnamed.jpg"
 
 GAME_TITLE = "Snake"
 
 GAME_SPEED = 10
 
-BACKGROUND_COLOR = (0, 0, 255)
+BACKGROUND_COLOR = (0, 0, 0)
 
 
 def initialize_pygame():
@@ -41,11 +41,11 @@ def get_events():
         if event.type == pygame.QUIT:
             events.append("quit")
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_w:
                 events.append("up")
-            elif event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_s:
                 events.append("down")
-            elif event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_a:
                 events.append("left")
             elif event.key == pygame.K_RETURN:
                 events.append("enter")
@@ -53,7 +53,7 @@ def get_events():
                 events.append("space")
             elif event.key == pygame.K_ESCAPE:
                 events.append("escape")
-            elif event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_d:
                 events.append("right")
     return events
 
