@@ -8,10 +8,11 @@ SNAKE_ICON = "unnamed.jpg"
 
 GAME_TITLE = "Snake"
 
-INITIAL_GAME_SPEED = 10
+Initial_Game_Speed = 10
 
 BACKGROUND_COLOR = (0, 0, 0)
 
+apples = 3
 
 def initialize_pygame():
     pygame.init()
@@ -28,7 +29,7 @@ def initialize_game_state():
         "program_running": True,
         "game_running": False,
         "game_paused": False,
-        "game_speed": INITIAL_GAME_SPEED,
+        "game_speed": Initial_Game_Speed,
         "game_score": 0
     }
     return game_state
@@ -77,19 +78,26 @@ def update_game_state(events, game_state):
         else:
             if "escape" in events or "space" in events:
                 game_state["game_paused"] = True
-            if "w" in events:
+            if "up" in events:
                 pass
-            if "s" in events:
+            if "down" in events:
                 pass
-            if "a" in events:
+            if "left" in events:
                 pass
-            if "d" in events:
+            if "right" in events:
                 pass
+
+
+def place_apples(apples, game_state):
+    pass
 
 
 def initialize_new_game(game_state):
     game_state["game_paused"] = False
     game_state["score"] = 0
+    game_state["game_speed"] = Initial_Game_Speed
+    game_state["apples"] = place_apples(apples, game_state)
+    game_state["Direction"] = [1, 0]
 
 def update_screen(screen, game_state):
     screen.fill((BACKGROUND_COLOR))
