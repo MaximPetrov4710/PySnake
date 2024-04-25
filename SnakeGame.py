@@ -47,18 +47,22 @@ def get_events():
                 events.append("down")
             elif event.key == pygame.K_a:
                 events.append("left")
+            elif event.key == pygame.K_d:
+                events.append("right")
             elif event.key == pygame.K_RETURN:
                 events.append("enter")
             elif event.key == pygame.K_SPACE:
                 events.append("space")
             elif event.key == pygame.K_ESCAPE:
                 events.append("escape")
-            elif event.key == pygame.K_d:
-                events.append("right")
     return events
 
-def update_game_state(game_state):
-    pass
+def update_game_state(events, game_state):
+    if "quit" in events:
+        game_state["program_running"] = False
+    elif not game_state["game_running"]:
+        if "escape" in events:
+            game_state["program_running"] = False
 
 def update_screen(screen, game_state):
     screen.fill((BACKGROUND_COLOR))
@@ -72,7 +76,7 @@ def main():
         clock.tick(GAME_SPEED)
         events = get_events()
         print(events)
-        update_game_state(game_state)
+        update_game_state(events,game_state)
         update_screen(screen, game_state)
     perform_shutdown()
 
