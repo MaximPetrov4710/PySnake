@@ -1,8 +1,13 @@
 import pygame
 import sys
+import random
 
 
-SCREEN_SIZE = (800, 600)
+Weight,Height = 800, 600
+
+Block_Size = 10
+
+Wall_Blocks = 3
 
 SNAKE_ICON = "unnamed.jpg"
 
@@ -14,11 +19,14 @@ BACKGROUND_COLOR = (0, 0, 0)
 
 initial_apples = 3
 
-initial_snake_lenght = 3
+Initial_snake_lenght = 3
+
+Size_X = Weight // Block_Size - Wall_Blocks * 2
+Size_Y = Height // Block_Size - Wall_Blocks * 2
 
 def initialize_pygame():
     pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE)
+    screen = pygame.display.set_mode((Weight,Height))
     icon = pygame.image.load(SNAKE_ICON)
     pygame.display.set_icon(icon)
     pygame.display.set_caption("Snake")
@@ -95,13 +103,24 @@ def initialize_new_game(game_state):
     game_state["game_speed"] = Initial_Game_Speed
     game_state["initial_apples"] = place_apples(initial_apples, game_state)
     game_state["direction"] = [1, 0]
-    place_snake(initial_snake_lenght, game_state)
+    place_snake(Initial_snake_lenght)
 
 def place_snake(length, game_state):
-    pass
+    x = Size_X //2
+    y = Size_Y //2
+    game_state["snake"].append((x,y))
+    for i in range (1, Initial_snake_lenght):
+        game_state["snake"].append((x - i, y))
 
-    def place_apples(n, game_state):
-        pass
+
+    def place_apples(apples, game_state, y=None, x=None):
+        for i in range(apples):
+            game_state["apples"] = []
+            while (x, y) in game_state["apples"] or (x, y) in game_state["snake"]:
+           X = random.randint(0,Size_X -1 )
+           Y = random.randint(0,Size_Y -1 )
+           game_state["apples"].append((x, y))
+
 
 def update_screen(screen, game_state):
     screen.fill(BACKGROUND_COLOR)
