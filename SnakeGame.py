@@ -12,7 +12,9 @@ Initial_Game_Speed = 10
 
 BACKGROUND_COLOR = (0, 0, 0)
 
-apples = 3
+initial_apples = 3
+
+initial_snake_lenght = 3
 
 def initialize_pygame():
     pygame.init()
@@ -79,28 +81,30 @@ def update_game_state(events, game_state):
             if "escape" in events or "space" in events:
                 game_state["game_paused"] = True
             if "up" in events:
-                pass
+                game_state["direction"] = (0, -1)
             if "down" in events:
-                pass
+                game_state["direction"] = (0, 1)
             if "left" in events:
-                pass
+                game_state["direction"] = (-1, 0)
             if "right" in events:
-                pass
-
-
-def place_apples(apples, game_state):
-    pass
-
+                game_state["direction"] = (1, 0)
 
 def initialize_new_game(game_state):
     game_state["game_paused"] = False
     game_state["score"] = 0
     game_state["game_speed"] = Initial_Game_Speed
-    game_state["apples"] = place_apples(apples, game_state)
-    game_state["Direction"] = [1, 0]
+    game_state["initial_apples"] = place_apples(initial_apples, game_state)
+    game_state["direction"] = [1, 0]
+    place_snake(initial_snake_lenght, game_state)
+
+def place_snake(length, game_state):
+    pass
+
+    def place_apples(n, game_state):
+        pass
 
 def update_screen(screen, game_state):
-    screen.fill((BACKGROUND_COLOR))
+    screen.fill(BACKGROUND_COLOR)
     pygame.display.flip()
 
 
