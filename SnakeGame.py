@@ -72,6 +72,11 @@ def get_events():
     return events
 
 def update_game_state(events, game_state):
+    check_key(events, game_state)
+    move_snake(game_state)
+    check_coll(game_state)
+    check_apples_cons(game_state)
+def check_key(events, game_state):
     if "quit" in events:
         game_state["program_running"] = False
     elif not game_state["game_running"]:
@@ -97,6 +102,13 @@ def update_game_state(events, game_state):
             if "right" in events:
                 game_state["direction"] = (1, 0)
 
+def move_snake(game_state):
+    game_state["snake"]
+def check_coll(game_state):
+    pass
+def check_apples_cons(game_state):
+    pass
+
 def initialize_new_game(game_state):
     game_state["game_paused"] = False
     game_state["score"] = 0
@@ -113,13 +125,15 @@ def place_snake(length, game_state):
         game_state["snake"].append((x - i, y))
 
 
-    def place_apples(apples, game_state, y=None, x=None):
+    def place_apples(apples, game_state, ):
+        game_state["apples"] = []
         for i in range(apples):
-            game_state["apples"] = []
+            X = random.randint(0, Size_X - 1)
+            Y = random.randint(0, Size_Y - 1)
             while (x, y) in game_state["apples"] or (x, y) in game_state["snake"]:
-           X = random.randint(0,Size_X -1 )
-           Y = random.randint(0,Size_Y -1 )
-           game_state["apples"].append((x, y))
+                X = random.randint(0,Size_X -1 )
+                Y = random.randint(0,Size_Y -1 )
+            game_state["apples"].append((x, y))
 
 
 def update_screen(screen, game_state):
