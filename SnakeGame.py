@@ -24,12 +24,16 @@ Initial_snake_lenght = 3
 Size_X = Weight // Block_Size - Wall_Blocks * 2
 Size_Y = Height // Block_Size - Wall_Blocks * 2
 
+apple_color = (191, 31, 31)
+
+apple_radius = Block_Size // 4
+
 def initialize_pygame():
     pygame.init()
     screen = pygame.display.set_mode((Weight,Height))
     icon = pygame.image.load(SNAKE_ICON)
     pygame.display.set_icon(icon)
-    pygame.display.set_caption("Snake")
+    pygame.display.set_caption("Coto-snake")
     clock = pygame.time.Clock()
     return screen, clock
 
@@ -103,18 +107,34 @@ def check_key(events, game_state):
                 game_state["direction"] = (1, 0)
 
 def move_snake(game_state):
-    game_state["snake"]
+    x = game_state["snake"][0][0] +game_state["direction"][0]
+    y = game_state["snake"][0][1] +game_state["direction"][1]
+    game_state["snake"].insert(0, (x, y))
 def check_coll(game_state):
-    pass
+    x, y = game_state["snake"][0]
+    if(
+            x < 0 or y < 0 or x >= Size_X or y >= Size_Y or
+            len (game_state["snake"]) > len(set(game_state["snake"]))
+):
+        game_state["game_running"] = False
+
+
 def check_apples_cons(game_state):
-    pass
+    for apple in game_state["apples"]:
+        if apple == game_state["snake"][0]:
+            game_state["apples"].remove(apple)
+            place_apples(1, game_state)
+            game_state["score"] += 1
+            game_state["game_speed"] = round(game_state["game_speed"] * 1.1)
+
 
 def initialize_new_game(game_state):
+    game_state["apples"] = []
     game_state["game_paused"] = False
     game_state["score"] = 0
     game_state["game_speed"] = Initial_Game_Speed
     game_state["initial_apples"] = place_apples(initial_apples, game_state)
-    game_state["direction"] = [1, 0]
+    game_state["direction"] = (1, 0)
     place_snake(Initial_snake_lenght)
 
 def place_snake(length, game_state):
@@ -126,7 +146,6 @@ def place_snake(length, game_state):
 
 
     def place_apples(apples, game_state, ):
-        game_state["apples"] = []
         for i in range(apples):
             X = random.randint(0, Size_X - 1)
             Y = random.randint(0, Size_Y - 1)
@@ -138,8 +157,23 @@ def place_snake(length, game_state):
 
 def update_screen(screen, game_state):
     screen.fill(BACKGROUND_COLOR)
+    if not game_state["game_running"]:
+       print_new_game_mess(screen)
+    elif game_state["game_paused"]:
+        print_game_paused_mess(screen)
+    if game_state["game_running"]:
+       draw_apples(screen, game_state["apples"])
+       draw_snake(screen, game_state["snake"])
+    draw_wallls(screen)
+    print_score(screen, game_state)
     pygame.display.flip()
 
+def draw_apples(screen, apples):
+    for apple in apples:
+        x = apple[0] * Block_Size + Wall_Blocks * Block_Size
+        y = apple[1] * Block_Size + Wall_Blocks * Block_Size
+        rect = ((x, y))
+        pygame.draw.rect(screen, apple_color, rect, border_radius= apple_radius)
 
 def main():
     screen, clock = initialize_pygame()
