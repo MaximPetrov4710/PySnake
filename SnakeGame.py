@@ -44,7 +44,7 @@ def initialize_game_state():
         "game_running": False,
         "game_paused": False,
         "game_speed": Initial_Game_Speed,
-        "game_score": 0
+        "score": 0
     }
     return game_state
 
@@ -77,9 +77,10 @@ def get_events():
 
 def update_game_state(events, game_state):
     check_key(events, game_state)
-    move_snake(game_state)
-    check_coll(game_state)
-    check_apples_cons(game_state)
+    if game_state["game_running"]:
+        move_snake(game_state)
+        check_coll(game_state)
+        check_apples_cons(game_state)
 def check_key(events, game_state):
     if "quit" in events:
         game_state["program_running"] = False
@@ -107,7 +108,7 @@ def check_key(events, game_state):
                 game_state["direction"] = (1, 0)
 
 def move_snake(game_state):
-    x = game_state["snake"][0][0] +game_state["direction"][0]
+    x = game_state["snake"][0][0] + game_state["direction"][0]
     y = game_state["snake"][0][1] +game_state["direction"][1]
     game_state["snake"].insert(0, (x, y))
 def check_coll(game_state):
@@ -133,7 +134,7 @@ def initialize_new_game(game_state):
     game_state["game_paused"] = False
     game_state["score"] = 0
     game_state["game_speed"] = Initial_Game_Speed
-    game_state["initial_apples"] = place_apples(initial_apples, game_state)
+    game_state["initial_apples"] = draw_apples()(initial_apples, game_state)
     game_state["direction"] = (1, 0)
     place_snake(Initial_snake_lenght)
 
@@ -161,19 +162,35 @@ def update_screen(screen, game_state):
        print_new_game_mess(screen)
     elif game_state["game_paused"]:
         print_game_paused_mess(screen)
-    if game_state["game_running"]:
+    else:
        draw_apples(screen, game_state["apples"])
        draw_snake(screen, game_state["snake"])
-    draw_wallls(screen)
-    print_score(screen, game_state)
+    draw_walls(screen)
+    print_score(screen, game_state["score"])
     pygame.display.flip()
+
+def print_new_game_mess(screen):
+    pass
+
+def print_game_paused_mess(screen):
+    pass
 
 def draw_apples(screen, apples):
     for apple in apples:
         x = apple[0] * Block_Size + Wall_Blocks * Block_Size
         y = apple[1] * Block_Size + Wall_Blocks * Block_Size
-        rect = ((x, y))
-        pygame.draw.rect(screen, apple_color, rect, border_radius= apple_radius)
+        rect = ((x, y)), (Block_Size, Block_Size)
+        pygame.draw.rect(screen, apple_color, rect, border_radius = apple_radius)
+
+def draw_snake(screen, snake):
+    pass
+
+def draw_walls(screen, snake):
+    pass
+
+
+def print_score(screen,score):
+    pass
 
 def main():
     screen, clock = initialize_pygame()
@@ -183,7 +200,7 @@ def main():
         events = get_events()
         print(events)
         update_game_state(events,game_state)
-        update_screen(screen, game_state)
+    update_screen(screen, game_state)
     perform_shutdown()
 
 main()
