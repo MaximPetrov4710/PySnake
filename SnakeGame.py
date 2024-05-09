@@ -17,10 +17,11 @@ SIZE_X = WIDTH // BLOCK_SIZE - WALL_BLOCKS * 2
 SIZE_Y = HEIGHT // BLOCK_SIZE - WALL_BLOCKS * 2
 
 SNAKE_RADIUS = BLOCK_SIZE // 4
-SNAKE_COLOR = (31, 191, 31)
+SNAKE_COLOR = (201, 107, 0)
 APPLE_COLOR = (191, 31, 31)
 APPLE_RADIUS = BLOCK_SIZE // 4
-
+WALL_COLOR = (31, 31 ,31)
+TEXT_COLOR = (255, 255, 255)
 
 def initialize_pygame():
     pygame.init()
@@ -73,7 +74,7 @@ def get_events():
 
 def update_game_state(events, game_state):
     check_key(events, game_state)
-    if game_state["game_running"]:
+    if game_state["game_running"] and not game_state["game_paused"]:
         move_snake(game_state)
         check_coll(game_state)
         check_apples_cons(game_state)
@@ -93,17 +94,17 @@ def check_key(events, game_state):
             game_state["game_running"] = False
         elif "space" in events:
             game_state["game_paused"] = False
-        else:
-            if "escape" in events or "space" in events:
-                game_state["game_paused"] = True
-            if "up" in events:
-                game_state["direction"] = (0, -1)
-            if "down" in events:
-                game_state["direction"] = (0, 1)
-            if "left" in events:
-                game_state["direction"] = (-1, 0)
-            if "right" in events:
-                game_state["direction"] = (1, 0)
+    else:
+        if "escape" in events or "space" in events:
+            game_state["game_paused"] = True
+        if "up" in events:
+            game_state["direction"] = (0, -1)
+        if "down" in events:
+            game_state["direction"] = (0, 1)
+        if "left" in events:
+            game_state["direction"] = (-1, 0)
+        if "right" in events:
+            game_state["direction"] = (1, 0)
 
 
 def move_snake(game_state):
@@ -130,6 +131,8 @@ def check_apples_cons(game_state):
             game_state["score"] += 1
             apples_eaten += 1
             game_state["game_speed"] = round(game_state["game_speed"] * 1.1)
+    if apples_eaten == 0:
+        game_state["snake"].pop()
 
 
 def initialize_new_game(game_state):
@@ -195,16 +198,25 @@ def draw_snake(screen, snake):
     for segment in snake:
         x = segment[0] * BLOCK_SIZE + WALL_BLOCKS * BLOCK_SIZE
         y = segment[1] * BLOCK_SIZE + WALL_BLOCKS * BLOCK_SIZE
-        rect = ((x, y)), (BLOCK_SIZE, BLOCK_SIZE)
+        rect = ((x, y), (BLOCK_SIZE, BLOCK_SIZE))
         pygame.draw.rect(screen, SNAKE_COLOR, rect, border_radius=SNAKE_RADIUS)
 
 
 def draw_walls(screen):
-    pass
+    wall_size = WALL_BLOCKS * BLOCK_SIZE
+    pygame.draw.rect(screen, WALL_COLOR, ((0, 0), (WIDTH, wall_size)))
+    pygame.draw.rect(screen, WALL_COLOR, ((0, 0), (wall_size, HEIGHT)))
+    pygame.draw.rect(screen, WALL_COLOR, ((0, HEIGHT - wall_size), (WIDTH, HEIGHT)))
+    pygame.draw.rect(screen, WALL_COLOR, ((WIDTH - wall_size, 0), (WIDTH, HEIGHT)))
+
 
 
 def print_score(screen, score):
-    pass
+    font = pygame.font.SysFont("Courier New", 24, bold=True)
+    text = font.render("Score: " + str(score), True, TEXT_COLOR)
+    text_rect = text.get_rect()
+    text_rect.topleft()
+    screen.blit(text, text_rect)
 
 
 def main():
@@ -213,7 +225,7 @@ def main():
     while game_state["program_running"]:
         clock.tick(game_state["game_speed"])
         events = get_events()
-        #print(events)
+        print(events)
         update_game_state(events, game_state)
         update_screen(screen, game_state)
     perform_shutdown()
