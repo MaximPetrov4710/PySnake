@@ -1,1 +1,2 @@
-Hi this is my first project you don't need to download src
+Hi this is my first final project
+It's snake take and experement
