@@ -113,8 +113,16 @@ def check_key(events, game_state):
 def move_snake(game_state):
     x = game_state["snake"][0][0] + game_state["direction"][0]
     y = game_state["snake"][0][1] + game_state["direction"][1]
+    if game_state["snake"][1] == (x, y):
+        if game_state["direction"][0] == -1:
+            x = game_state["snake"][0][0] + 1
+        elif game_state["direction"][0] == 1:
+            x = game_state["snake"][0][0] - 1
+        elif game_state["direction"][1] == -1:
+            y = game_state["snake"][0][1] + 1
+        elif game_state["direction"][1] == 1:
+            y = game_state["snake"][0][1] - 1
     game_state["snake"].insert(0, (x, y))
-    # game_state["snake"].pop()
 
 
 def check_coll(game_state):
